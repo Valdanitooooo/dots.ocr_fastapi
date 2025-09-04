@@ -49,13 +49,13 @@ async def parse_file(
 
     """Receive PDF/images and return Markdown"""
     temp_dir, session_id = create_temp_session_dir()
-    file_path = os.path.join(temp_dir, file.filename)
+    ext = os.path.splitext(file.filename)[1].lower()
+    safe_filename = f"upload{ext}"
+    file_path = os.path.join(temp_dir, safe_filename)
 
     try:
         with open(file_path, "wb") as f:
             shutil.copyfileobj(file.file, f)
-
-        ext = os.path.splitext(file.filename)[1].lower()
 
         if ext == ".pdf":
             results = dots_parser.parse_pdf(
